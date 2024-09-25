@@ -10,7 +10,7 @@ else
 fi
 
 # 値がセットされていない場合は処理を終了
-if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$SSH_PORT"]; then
+if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$SSH_PORT" ]; then
   echo "Variables are not set in the .env file."
   exit 1
 fi
