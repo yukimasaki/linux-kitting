@@ -28,14 +28,14 @@ apt install -y git
 
 # ====== SSH公開鍵認証の設定 ======
 # SSHディレクトリの作成と権限の設定
--u $USERNAME mkdir -p /home/$USERNAME/.ssh
+mkdir -p /home/$USERNAME/.ssh
 chmod 700 /home/$USERNAME/.ssh
 
 # SSH鍵ペアの生成 (ユーザーの権限で実行)
--u $USERNAME ssh-keygen -t ed25519 -f /home/$USERNAME/.ssh/id_ed25519 -N ""
+ssh-keygen -t ed25519 -f /home/$USERNAME/.ssh/id_ed25519 -N ""
 
 # 公開鍵をauthorized_keysに追記
--u $USERNAME cat /home/$USERNAME/.ssh/id_ed25519.pub >> /home/$USERNAME/.ssh/authorized_keys
+cat /home/$USERNAME/.ssh/id_ed25519.pub >> /home/$USERNAME/.ssh/authorized_keys
 chmod 600 /home/$USERNAME/.ssh/authorized_keys
 
 # 公開鍵ファイルの削除
