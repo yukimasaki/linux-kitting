@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# ====== 作業ディレクトリを指定 ======
-cd /workspaces/linux-kitting
-
 # ====== GitHubへのSSH接続設定 ======
 # SSH設定ファイルの作成
 bash -c "echo -e 'Host github-yukimasaki\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/github-yukimasaki\n' > ~/.ssh/config"
