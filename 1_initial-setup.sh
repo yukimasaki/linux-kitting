@@ -21,11 +21,7 @@ useradd -m -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
 
 # ユーザーにsudo権限を付与
-usermod -aG $USERNAME
-
-# ====== パッケージの更新・インストール ======
-apt update -y
-apt install -y git
+usermod -aG sudo $USERNAME
 
 # ====== SSH公開鍵認証の設定 ======
 # SSHディレクトリの作成と権限の設定
