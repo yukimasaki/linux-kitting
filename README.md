@@ -26,3 +26,14 @@ nano .env
 ```bash
 ./1_initial-setup.sh
 ```
+
+# SSH設定後
+### 作業ディレクトリを変更する
+```bash
+cd /workspaces/linux-kitting
+```
+
+### スクリプトを実行する
+```bash
+./2_docker-setup.sh
+```
