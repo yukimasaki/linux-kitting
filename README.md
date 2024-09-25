@@ -19,3 +19,9 @@ mkdir /workspaces && cd /workspaces
 ```bash
 git clone https://github.com/yukimasaki/linux-kitting.git
 ```
+
+### スクリプトを実行する
+```bash
+cd linux-kitting
+./1_initial-setup.sh
+```
