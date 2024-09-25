@@ -1,23 +1,27 @@
 #!/bin/bash
 
+# ====== 作業ディレクトリを指定 ======
+cd /workspaces/linux-kitting
+
 # ====== GitHubへのSSH接続設定 ======
 # SSH設定ファイルの作成
-sudo -u $USERNAME bash -c "echo -e 'Host github-yukimasaki\n\tHostName github.com\n\tUser git\n\tIdentityFile ~/.ssh/id_ed25519_github\n\tStrictHostKeyChecking no' > /home/$USERNAME/.ssh/config"
-sudo chmod 600 /home/$USERNAME/.ssh/config
+bash -c "echo -e 'Host github-yukimasaki\n  HostName github.com\n  User git\n  Port 22\n  IdentityFile ~/.ssh/github-yukimasaki\n' > ~/.ssh/config"
+chmod 600 ~/.ssh/config
 
 # GitHub用SSH鍵ペアの生成
-sudo -u $USERNAME ssh-keygen -t ed25519 -f /home/$USERNAME/.ssh/id_ed25519_github -N ""
+ssh-keygen -t ed25519 -f ~/.ssh/github-yukimasaki -N ""
 
 # GitHub用の公開鍵表示（コピペ用）
-echo "=== Copy this GitHub public key and add it to GitHub ==="
-sudo cat /home/$USERNAME/.ssh/id_ed25519_github.pub
+echo -e "\n\033[1;33m=== Copy this GitHub public key and add it to GitHub ===\033[0m"
+cat ~/.ssh/github-yukimasaki.pub
+echo -e "\n\033[1;33m=== Copy this GitHub public key and add it to GitHub ===\033[0m"
 
 # GitHub用公開鍵ファイルの削除
-sudo rm /home/$USERNAME/.ssh/id_ed25519_github.pub
+rm ~/.ssh/github-yukimasaki.pub
 
 # SSH接続のテスト
-sudo -u $USERNAME ssh -T github-yukimasaki
+ssh -T github-yukimasaki
 
 # ====== Dockerのインストール ======
 # インストールスクリプトを実行
-sudo -u $USERNAME bash docker-install.sh
+./docker-install.sh

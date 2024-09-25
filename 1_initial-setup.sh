@@ -1,20 +1,21 @@
 #!/bin/bash
 
-# ====== ユーザー作成とsudo権限の付与 ======
-# .envファイルを読み込む
+# ====== .envファイルを読み込む ======
+# .envファイルが存在しない場合は処理を終了
 if [ -f .env ]; then
   export $(grep -v '^#' .env | xargs)
 else
-  echo ".env file not found. Please create it with USERNAME and PASSWORD variables."
+  echo ".env file not found. Please create it."
   exit 1
 fi
 
-# USERNAMEとPASSWORDは.envファイルから読み込まれる
-if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
-  echo "USERNAME or PASSWORD is not set in the .env file."
+# 値がセットされていない場合は処理を終了
+if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$SSH_PORT"]; then
+  echo "Variables are not set in the .env file."
   exit 1
 fi
 
+# ====== ユーザー作成とsudo権限の付与 ======
 # ユーザー作成
 useradd -m -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
@@ -22,36 +23,40 @@ echo "$USERNAME:$PASSWORD" | chpasswd
 # ユーザーにsudo権限を付与
 usermod -aG sudo $USERNAME
 
+# ユーザーを変更
+su $USERNAME
+
 # ====== パッケージの更新・インストール ======
-apt update -y
-apt install -y git
+sudo apt update -y
+sudo apt install -y git
 
 # ====== SSH公開鍵認証の設定 ======
 # SSHディレクトリの作成と権限の設定
-mkdir -p /home/$USERNAME/.ssh
-chmod 700 /home/$USERNAME/.ssh
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
 
 # SSH鍵ペアの生成 (ユーザーの権限で実行)
-ssh-keygen -t ed25519 -f /home/$USERNAME/.ssh/id_ed25519 -N ""
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
 
 # 公開鍵をauthorized_keysに追記
-cat /home/$USERNAME/.ssh/id_ed25519.pub >> /home/$USERNAME/.ssh/authorized_keys
-chmod 600 /home/$USERNAME/.ssh/authorized_keys
-
-# キーペアを削除
-rm /home/$USERNAME/.ssh/id_ed25519
-rm /home/$USERNAME/.ssh/id_ed25519.pub
+cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
 
 # SSHサーバー設定の変更 (公開鍵認証を有効化)
-sed -i 's/^#\?PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
-sed -i 's/^#\?PubkeyAuthentication no/PubkeyAuthentication yes/' /etc/ssh/sshd_config
-sed -i 's/^#\?PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+sudo sed -i "s/^#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/" /etc/ssh/sshd_config
+sudo sed -i "s/^#\?PubkeyAuthentication \(yes\|no\)/PubkeyAuthentication yes/" /etc/ssh/sshd_config
+sudo sed -i "s/^#\?PermitRootLogin \(yes\|no\)/PermitRootLogin no/" /etc/ssh/sshd_config
+sudo sed -i "s/^#\?Port [0-9]\+/Port $SSH_PORT/" /etc/ssh/sshd_config
 
-systemctl reload sshd
+sudo systemctl reload sshd
 
 # 秘密鍵の表示（コピペ用）
-echo "=== Copy this private key and store it securely ==="
-cat /home/$USERNAME/.ssh/id_ed25519
+echo -e "\n\033[1;33m=== Copy this private key and store it securely ===\033[0m"
+cat ~/.ssh/id_ed25519
+echo -e "\n\033[1;33m=== Copy this private key and store it securely ===\033[0m"
+
+# キーペアを削除
+rm ~/.ssh/id_ed25519 ~/.ssh/id_ed25519.pub
 
 # コンソールの表示言語を英語に変更
 # 追加する行
