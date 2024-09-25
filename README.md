@@ -10,6 +10,11 @@ ssh root@example.com
 apt update -y && apt install -y git
 ```
 
+### 作業ディレクトリを作成する
+```bash
+mkdir /workspaces && cd /workspaces
+```
+
 ### キッティングセット (本リポジトリ)をクローンする
 ```bash
 git clone https://github.com/yukimasaki/linux-kitting.git
