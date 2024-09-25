@@ -25,15 +25,15 @@ usermod -aG sudo $USERNAME
 
 # ====== SSH公開鍵認証の設定 ======
 # SSHディレクトリの作成と権限の設定
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
+mkdir -p /home/$USERNAME/.ssh
+chmod 700 /home/$USERNAME/.ssh
 
 # SSH鍵ペアの生成 (ユーザーの権限で実行)
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+ssh-keygen -t ed25519 -f /home/$USERNAME/.ssh/id_ed25519 -N ""
 
 # 公開鍵をauthorized_keysに追記
-cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
-chmod 600 ~/.ssh/authorized_keys
+cat /home/$USERNAME/.ssh/id_ed25519.pub >> /home/$USERNAME/.ssh/authorized_keys
+chmod 600 /home/$USERNAME/.ssh/authorized_keys
 
 # SSHサーバー設定の変更 (公開鍵認証を有効化)
 sed -i "s/^#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/" /etc/ssh/sshd_config
@@ -45,14 +45,14 @@ systemctl reload sshd
 
 # 秘密鍵の表示（コピペ用）
 echo -e "\n\033[1;33m=== Copy this private key and store it securely ===\033[0m"
-cat ~/.ssh/id_ed25519
+cat /home/$USERNAME/.ssh/id_ed25519
 echo -e "\n\033[1;33m=== Copy this private key and store it securely ===\033[0m"
 
 # キーペアを削除
-rm ~/.ssh/id_ed25519 ~/.ssh/id_ed25519.pub
+rm /home/$USERNAME/.ssh/id_ed25519 /home/$USERNAME/.ssh/id_ed25519.pub
 
 # .sshディレクトリの所有権を変更
-chown -R $USERNAME:$USERNAME ~/.ssh
+chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
 
 # コンソールの表示言語を英語に変更
 # 追加する行
