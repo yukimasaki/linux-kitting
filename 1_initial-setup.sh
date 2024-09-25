@@ -21,14 +21,11 @@ useradd -m -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
 
 # ユーザーにsudo権限を付与
-usermod -aG sudo $USERNAME
-
-# ユーザーを変更
-su $USERNAME
+usermod -aG $USERNAME
 
 # ====== パッケージの更新・インストール ======
-sudo apt update -y
-sudo apt install -y git
+apt update -y
+apt install -y git
 
 # ====== SSH公開鍵認証の設定 ======
 # SSHディレクトリの作成と権限の設定
@@ -43,12 +40,12 @@ cat ~/.ssh/id_ed25519.pub >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 
 # SSHサーバー設定の変更 (公開鍵認証を有効化)
-sudo sed -i "s/^#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/" /etc/ssh/sshd_config
-sudo sed -i "s/^#\?PubkeyAuthentication \(yes\|no\)/PubkeyAuthentication yes/" /etc/ssh/sshd_config
-sudo sed -i "s/^#\?PermitRootLogin \(yes\|no\)/PermitRootLogin no/" /etc/ssh/sshd_config
-sudo sed -i "s/^#\?Port [0-9]\+/Port $SSH_PORT/" /etc/ssh/sshd_config
+sed -i "s/^#\?PasswordAuthentication \(yes\|no\)/PasswordAuthentication no/" /etc/ssh/sshd_config
+sed -i "s/^#\?PubkeyAuthentication \(yes\|no\)/PubkeyAuthentication yes/" /etc/ssh/sshd_config
+sed -i "s/^#\?PermitRootLogin \(yes\|no\)/PermitRootLogin no/" /etc/ssh/sshd_config
+sed -i "s/^#\?Port [0-9]\+/Port $SSH_PORT/" /etc/ssh/sshd_config
 
-sudo systemctl reload sshd
+systemctl reload sshd
 
 # 秘密鍵の表示（コピペ用）
 echo -e "\n\033[1;33m=== Copy this private key and store it securely ===\033[0m"
@@ -57,6 +54,9 @@ echo -e "\n\033[1;33m=== Copy this private key and store it securely ===\033[0m"
 
 # キーペアを削除
 rm ~/.ssh/id_ed25519 ~/.ssh/id_ed25519.pub
+
+# .sshディレクトリの所有権を変更
+chown -R $USERNAME:$USERNAME ~/.ssh
 
 # コンソールの表示言語を英語に変更
 # 追加する行
