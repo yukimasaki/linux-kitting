@@ -20,7 +20,7 @@ useradd -m -s /bin/bash $USERNAME
 echo "$USERNAME:$PASSWORD" | chpasswd
 
 # ユーザーにsudo権限を付与
-usermod -aG $USERNAME
+usermod -aG sudo $USERNAME
 
 # ====== パッケージの更新・インストール ======
 apt update -y
