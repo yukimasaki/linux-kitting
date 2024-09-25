@@ -20,8 +20,14 @@ mkdir /workspaces && cd /workspaces
 git clone https://github.com/yukimasaki/linux-kitting.git
 ```
 
-### スクリプトを実行する
+### .envファイルを作成する
 ```bash
 cd linux-kitting
+cp .env.example .env
+nano .env
+```
+
+### スクリプトを実行する
+```bash
 ./1_initial-setup.sh
 ```
