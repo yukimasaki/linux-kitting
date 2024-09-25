@@ -5,11 +5,6 @@
 ssh root@example.com
 ```
 
-### パッケージを更新・インストールする
-```bash
-apt update -y && apt install -y git
-```
-
 ### 作業ディレクトリを作成する
 ```bash
 mkdir /workspaces && cd /workspaces
