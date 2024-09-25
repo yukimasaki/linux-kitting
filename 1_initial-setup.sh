@@ -38,7 +38,8 @@ ssh-keygen -t ed25519 -f /home/$USERNAME/.ssh/id_ed25519 -N ""
 cat /home/$USERNAME/.ssh/id_ed25519.pub >> /home/$USERNAME/.ssh/authorized_keys
 chmod 600 /home/$USERNAME/.ssh/authorized_keys
 
-# 公開鍵ファイルの削除
+# キーペアを削除
+rm /home/$USERNAME/.ssh/id_ed25519
 rm /home/$USERNAME/.ssh/id_ed25519.pub
 
 # SSHサーバー設定の変更 (公開鍵認証を有効化)
