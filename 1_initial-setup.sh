@@ -52,6 +52,19 @@ systemctl reload sshd
 echo "=== Copy this private key and store it securely ==="
 cat /home/$USERNAME/.ssh/id_ed25519
 
+# コンソールの表示言語を英語に変更
+# 追加する行
+NEW_ENTRY="export LANG=en_US"
+
+# ~/.bashrcに既に同じ設定があるか確認
+if grep -Fxq "$NEW_ENTRY" ~/.bashrc; then
+  echo "LANG is already set in ~/.bashrc."
+else
+  # ~/.bashrcに設定を追加
+  echo "$NEW_ENTRY" >> ~/.bashrc
+  echo "LANG has been added to ~/.bashrc."
+fi
+
 # ====== 完了 ======
 SCRIPT_NAME=$(basename "$0")
 echo "$SCRIPT_NAME is completed."
